@@ -1,0 +1,25 @@
+services:
+  #Se definen las imagenes a bajar de Docker-Hub para componentizarlas en nuestro Docker-Desktop
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: admin
+      PGDATA: /data/springdata
+    volumes:
+      - postgres-db:/data/springdata
+    ports:
+      - "54321:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+
+volumes:
+  postgres-db:
+    driver: local
+    
+networks:
+  postgres:
+    driver: bridge
