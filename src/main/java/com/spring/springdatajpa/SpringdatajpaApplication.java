@@ -1,6 +1,7 @@
 package com.spring.springdatajpa;
 
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @SpringBootApplication
 @AllArgsConstructor
@@ -20,6 +22,8 @@ public class SpringdatajpaApplication {
 
 	@Autowired
 	StudentRepository studentRepository;
+	@Autowired
+	StudentIdCardRepository studentIdCardRepository;
 	@Autowired
 	JavaFaker javaFaker;
 
@@ -31,31 +35,81 @@ public class SpringdatajpaApplication {
 	@Bean
 	CommandLineRunner commandLineRunner() {
 
-		//Borro la tabla
-		studentRepository.deleteAll();
+		//Borro la tabla student
+		//studentRepository.deleteAll();
 
 		return args -> {
-			//Genero los datos con java faker y los gusrado en tabla
-			javaFaker.generateDataFaker();
+//			//Genero los datos con java faker y los gusrado en tabla
+//			javaFaker.generateStudentsDataFaker();
+//			//Consulto los datos de student ordenados
+//			getStudentSortingData();
+//			//Consulto los datos de student ordenados y paginados
+//			getStudentPageableSortingData();
 
-			//Consulto los datos ordenados
-			getSortingData();
+			//Creo el student
+			Student student = javaFaker.getStudent();
+			//Creo el studentIdCard
+			StudentIdCard studentIdCard = new StudentIdCard(
+					student,
+					String.valueOf(RandomStringUtils.random(15, false, true))
+			);
+//			//Agrego el studentIdCard a student
+//			student.setStudentIdCard(studentIdCard);
+//			//Guardo student en DB
+//			studentRepository.save(student);
 
-			//Consulto los datos ordenados y paginados
-			getPageableSortingData();
+			studentIdCardRepository.save(studentIdCard);
 
+			//Busco el student y obtengo los books asociados
+			studentRepository.findById(1L)
+							.ifPresent(s -> {
+								System.out.println("Busca los libros...");
+								List<Book> books = s.getBooks();
+								books.forEach(book -> {
+									System.out.println(
+											s.getFirstName() + " de " + book.getBook_name()
+									);
+								});
+							});
+
+
+			//studentIdCardRepository.save(studentIdCard);
+
+			studentIdCardRepository.findAll()
+					.forEach(studentIdCard1 -> System.out.println(
+							studentIdCard1.getStudent().getId() +" "+
+							studentIdCard1.getStudent().getFirstName() +" "+
+							studentIdCard1.getStudent().getEmail() +" "+
+							studentIdCard1.getCard_number()
+						)
+					);
+
+//			studentRepository.findById(242L)
+//					.ifPresentOrElse(
+//						System.out::println,() ->
+//						System.out.println("Student not found")
+//			);
+//
+//			studentIdCardRepository.findById(9L)
+//					.ifPresentOrElse(
+//							System.out::println,() ->
+//							System.out.println("StudentIdCard not found")
+//					);
+
+			//Borro el registro con relacion bidireccional
+			//studentRepository.deleteById(242L);
 
 		};
 	}
 
-	private void getPageableSortingData() {
+	private void getStudentPageableSortingData() {
 		Sort sort = Sort.by("firstName").ascending();
 		PageRequest pageRequest = PageRequest.of(0,5, sort);
 		Page<Student> page = studentRepository.findAll(pageRequest);
 		System.out.println(page);
 	}
 
-	private void getSortingData() {
+	private void getStudentSortingData() {
 //		Sort sort = Sort.by(Sort.Direction.ASC,"firstName");
 		Sort sort = Sort.by("firstName").ascending().and(Sort.by("age").descending());
 		studentRepository.findAll(sort)
