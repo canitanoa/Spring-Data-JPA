@@ -53,3 +53,6 @@ JPQL snippet:
 | False              	| findByActiveFalse()                                     	| … where x.active = false                                       	|
 | IgnoreCase         	| findByFirstnameIgnoreCase                               	| … where UPPER(x.firstname) = UPPER(?1)                         	|
 
+
+
+<img src="https://github.com/canitanoa/spring-data-jpa/blob/master/DER.png"  width="600" height="300">
