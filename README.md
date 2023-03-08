@@ -22,6 +22,7 @@ Project Spring Data JPA
         Pass: admin
 ````       
 DER
+
 <img src="https://github.com/canitanoa/spring-data-jpa/blob/master/DER.png"  width="600" height="300">
 
 JPQL snippet: 
