@@ -34,6 +34,7 @@ public class Student {
 
     @OneToOne(
             mappedBy = "student", //Transforma la relacion en bidireccional
+            cascade = CascadeType.ALL,
             orphanRemoval = true //Para que al borrarse se borre tambien studentIdCard
     )
     private StudentIdCard studentIdCard;
@@ -45,6 +46,29 @@ public class Student {
             fetch = FetchType.LAZY
     )
     private List<Book> books = new ArrayList<>();
+
+//    @ManyToMany(
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+//            fetch = FetchType.LAZY
+//    )
+//    @JoinTable(
+//            name="enrolment",
+//            joinColumns = @JoinColumn(
+//                    name = "student_id",
+//                    foreignKey = @ForeignKey(name = "enrolment_student_id_fk")
+//            ),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "course_id",
+//                    foreignKey = @ForeignKey(name = "enrolment_course_id_fk")
+//            )
+//    )
+//    private List<Course> courses = new ArrayList<>();
+
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "student"
+    )
+    private List<Enrolment> enrolments = new ArrayList<>();
 
     public Student() {
     }
@@ -124,6 +148,28 @@ public class Student {
             this.books.remove(book);
             book.setStudent(null);
         }
+    }
+
+//    public void enrolToCourse(Course course){
+//        this.courses.add(course);
+//        course.getStudents().add(this);
+//    }
+//
+//    public void unEnrolToCourse(Course course){
+//        this.courses.remove(course);
+//        course.getStudents().remove(this);
+//    }
+
+    public List<Enrolment> getEnrolments() {
+        return enrolments;
+    }
+    public void setEnrolment(Enrolment enrolment) {
+        if (!enrolments.contains(enrolment)){
+            enrolments.add(enrolment);
+        }
+    }
+    public void removeEnrolment(Enrolment enrolment) {
+        enrolments.remove(enrolment);
     }
 
     @Override

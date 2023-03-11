@@ -40,6 +40,10 @@ public class StudentIdCard {
     public StudentIdCard() {
     }
 
+    public StudentIdCard(String card_number) {
+        this.card_number = card_number;
+    }
+
     public StudentIdCard(Student student, String card_number) {
         this.student = student;
         this.card_number = card_number;

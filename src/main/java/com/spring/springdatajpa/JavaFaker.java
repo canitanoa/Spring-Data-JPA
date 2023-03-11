@@ -45,10 +45,12 @@ public class JavaFaker {
         //Create object Student
         Student student = new Student(firstName,lastName,email,age);
 
-        //Agrego a student los books asociados (1 - N)
+        //Agrego los books a student (N - 1)
         student.addBook(new Book(faker.name().title(), LocalDateTime.now().minusDays(1)));
         student.addBook(new Book(faker.name().nameWithMiddle().toUpperCase(), LocalDateTime.now().minusDays(10)));
         student.addBook(new Book(faker.name().username(), LocalDateTime.now().minusDays(45)));
+
+
 
         return student;
     }

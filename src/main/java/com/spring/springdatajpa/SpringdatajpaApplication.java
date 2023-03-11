@@ -53,12 +53,32 @@ public class SpringdatajpaApplication {
 					student,
 					String.valueOf(RandomStringUtils.random(15, false, true))
 			);
-//			//Agrego el studentIdCard a student
-//			student.setStudentIdCard(studentIdCard);
-//			//Guardo student en DB
-//			studentRepository.save(student);
+			//Agrego el studentIdCard a student
+			student.setStudentIdCard(studentIdCard);
 
-			studentIdCardRepository.save(studentIdCard);
+//			//Enrolo el estudiante a un curso
+//			student.enrolToCourse(new Course("Maths","Exactas"));
+//			student.enrolToCourse(new Course("Computer Science","IT"));
+
+			student.setEnrolment(new Enrolment(
+					new EnrolmentId(1L,1L),
+					student,
+					new Course("Maths","Exactas"))
+			);
+
+			student.setEnrolment(new Enrolment(
+					new EnrolmentId(1L,2L),
+					student,
+					new Course("Computer Science","IT"))
+			);
+
+			//Guardo student en DB
+			studentRepository.save(student);
+
+
+
+			//Guardo el studentIdCard en DB (este tambien guarda al student)
+//			studentIdCardRepository.save(studentIdCard);
 
 			//Busco el student y obtengo los books asociados
 			studentRepository.findById(1L)
